@@ -2,7 +2,7 @@ import xport
 import math
 import matplotlib.pyplot as plt
 
-__DEBUG__ = True
+__DEBUG__ = False
 
 INDIV_FOODS_SEQN_INDEX = 0
 INDIV_FOODS_TIME_INDEX = 13
@@ -32,7 +32,7 @@ def parseDataset(fileName):
 
             if __DEBUG__:
                 count += 1
-                if count > 100:
+                if count > 60:
                     break
     return participants
 
