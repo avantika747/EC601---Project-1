@@ -1,6 +1,8 @@
 import numpy as np
 from numpy.random import rand
 
+__DEBUG__ = True
+
 def initKRandomCentroids(trainingSet, k):
     '''
     trainingSet: 'row' participants x 'col' hours (24)
@@ -13,15 +15,17 @@ def initKRandomCentroids(trainingSet, k):
     return initial_centroids
 
 def newCentroid(clusters, k, d):
-    # What to do if no data in a cluster?
     centroids = np.zeros((k,d))
-    for index, data in clusters.items():
+    emptyClusters = []
+    for index, data in enumerate(clusters):
         n = len(data)
-        mean = np.sum(data, axis=0) #/ n
-        print(n)
-        mean = mean / n
+        if n == 0:
+            emptyClusters.append(index)
+            continue
+        totalSum = np.sum(data, axis=0)
+        mean = totalSum / n
         centroids[index,:] = mean
-    return centroids
+    return centroids, emptyClusters
 
     
 # To do: change to dynamic time warping (DTW)
@@ -39,7 +43,7 @@ def getDistance(trainingSet, mean):
 
 def getObjective(clusters, centroids):
     objective = 0
-    for index, data in clusters.items():
+    for index, data in enumerate(clusters):
         diff_sq = np.square(data - centroids[index, :])
         objective += np.sum(diff_sq)
     return objective
@@ -61,7 +65,9 @@ def kmeans(data, k, max_iter):
     data = np.array(data)
     n, d = data.shape # number of participants, number of features
 
-    clusters = {} # cluster index : datasets for each cluster
+    clusters = [0] * k # cluster index : datasets for each cluster
+    clusters = np.array(clusters, dtype=object)
+
     centroids = initKRandomCentroids(data, k)
     objectives = []
     for i in range(max_iter):
@@ -75,6 +81,23 @@ def kmeans(data, k, max_iter):
         for j in range(k):
             indices = np.where(minDist == j)
             clusters[j] = data[indices]
-        centroids = newCentroid(clusters, k, d)
+
+        centroids, emptyClusters = newCentroid(clusters, k, d)
+
+        for j in range(len(emptyClusters)-1, -1, -1): # changes objective
+            k -= 1
+            index = emptyClusters[j]
+            clusters = np.delete(clusters, index, axis=0)
+            centroids = np.delete(centroids, index, axis=0)
+    
         objectives.append(getObjective(clusters, centroids))
+
+    if __DEBUG__:
+        print(k, " clusters")
+        print("Centroids:")
+        for mean in centroids:
+            print(mean)
+        for i, cluster_data in enumerate(clusters):
+            print(i, " : ", len(cluster_data))
+
     return centroids, clusters, objectives

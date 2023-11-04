@@ -20,8 +20,8 @@ data_labels[2*n_per_cluster:] = 2
 # Apply k-means clustering to fake dataset
 centroids, clusters, obj_val = kmeans(data, 3, 5)
 plt.figure()
-for i in clusters:
-    plt.scatter(clusters[i][:,0], clusters[i][:,1], label=i)
+for i, cluster_data in enumerate(clusters):
+    plt.scatter(cluster_data[:,0], cluster_data[:,1], label=i)
     plt.scatter(centroids[:,0], centroids[:,1])
     plt.legend()
 plt.savefig("./plots/test_kmeans.png")

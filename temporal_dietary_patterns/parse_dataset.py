@@ -24,6 +24,9 @@ def parseDataset(fileName):
             seqn = int(row[INDIV_FOODS_SEQN_INDEX])
             time = int(math.floor(row[INDIV_FOODS_TIME_INDEX] / SEC_PER_HR))
             iron = row[INDIV_FOODS_IRON_INDEX]
+            if math.isnan(iron):
+                continue
+
             if seqn not in participants:
                 participants[seqn] = [0] * TOTAL_HOURS
                 participants[seqn][time] = iron
@@ -36,21 +39,21 @@ def parseDataset(fileName):
                     break
     return participants
 
-def plotIndivIronIntake(seqn, ironIntake, imgFileName):
+def plotIronIntake(title, ironIntake, imgFileName):
     '''
-    seqn: participant's unique number
+    title: participant's sequence number or centroid index
     ironIntake: [iron intake at ith hour] * 24
     imgFileName: name of output image file
     '''
 
     if __DEBUG__:
-        print("Plotting participant " + str(seqn) + "'s iron intake...")
+        print("Plotting " + title + "'s iron intake...")
     
     plt.xlim([0, TOTAL_HOURS])
     plt.xticks(range(TOTAL_HOURS), range(TOTAL_HOURS))
     plt.xlabel("Time (hours)")
     plt.ylabel("Iron Intake (mg)")
-    plt.title("Participant " + str(seqn))
+    plt.title(title)
     for hr, iron in enumerate(ironIntake):
         plt.bar(hr, iron)
     plt.savefig(imgFileName)
