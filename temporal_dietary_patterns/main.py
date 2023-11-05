@@ -2,7 +2,7 @@ from parse_dataset import *
 from kmeans_clustering import *
 
 __PLOT_INDIVIDUALS__ = False
-__PLOT_KMEANS__ = True
+__PLOT_KMEANS__ = False
 
 K = 3
 MAX_ITERATIONS = 5
