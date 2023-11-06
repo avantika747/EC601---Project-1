@@ -4,7 +4,7 @@
 
 
 ## Dataset
-The dataset used is NHANES 2017-2018 Dietary Data (Dietary Interview - Individual Foods, First Day).
+The dataset used is NHANES 2017-2018 Dietary Data (Dietary Interview - Individual Foods, First Day). Link: https://wwwn.cdc.gov/Nchs/Nhanes/2017-2018/DR1IFF_J.XPT
 
 ## Algorithm
 The algorithm used is kernel k-means clustering.
