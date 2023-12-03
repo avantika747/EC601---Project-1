@@ -1,5 +1,10 @@
 import numpy as np
 from numpy.random import rand
+from tslearn.metrics import dtw
+
+EUCLIDEAN = 0
+DTW = 1
+DIST_FUNC = EUCLIDEAN
 
 __DEBUG__ = True
 
@@ -27,22 +32,26 @@ def newCentroid(clusters, k, d):
         centroids[index,:] = mean
     return centroids, emptyClusters
 
-    
-# To do: change to dynamic time warping (DTW)
 def getDistance(trainingSet, mean):
     '''
-    Euclidean distance formula between training set and a cluster's mean
+    Distance formula between training set and a cluster's mean
     trainingSet: (n, d=24), n = # participants, d = # features/hours
     mean: (d=24, 1), column  vector
     distance: (n, 1)
     '''
-    
-    diff_sq = np.square(trainingSet - mean)
-    distance = np.sqrt(np.sum(diff_sq, axis=1))
-    distance = np.reshape(distance, (distance.shape[0],))
-
-    
-    return distance
+   
+    if DIST_FUNC == EUCLIDEAN:
+        # Euclidean distance formula: 
+        diff_sq = np.square(trainingSet - mean)
+        distance = np.sqrt(np.sum(diff_sq, axis=1))
+        distance = np.reshape(distance, (distance.shape[0],))
+        return distance
+    else:
+        # Dynamic time warping distance formula:
+        dtw_distance = []
+        for i in range(len(trainingSet)):
+            dtw_distance.append(dtw(trainingSet[i], mean))
+        return dtw_distance
 
 def getObjective(clusters, centroids):
     objective = 0
