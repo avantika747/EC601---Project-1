@@ -36,9 +36,12 @@ def getDistance(trainingSet, mean):
     mean: (d=24, 1), column  vector
     distance: (n, 1)
     '''
+    
     diff_sq = np.square(trainingSet - mean)
     distance = np.sqrt(np.sum(diff_sq, axis=1))
     distance = np.reshape(distance, (distance.shape[0],))
+
+    
     return distance
 
 def getObjective(clusters, centroids):
@@ -62,7 +65,7 @@ def kmeans(data, k, max_iter):
     * Return clusters
     '''
 
-    data = np.array(data)
+    #data = np.array(data)
     n, d = data.shape # number of participants, number of features
 
     clusters = [0] * k # cluster index : datasets for each cluster

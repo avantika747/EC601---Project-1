@@ -1,6 +1,7 @@
 import xport
 import math
 import matplotlib.pyplot as plt
+import numpy as np
 
 __DEBUG__ = False
 
@@ -35,9 +36,19 @@ def parseDataset(fileName):
 
             if __DEBUG__:
                 count += 1
-                if count > 60:
+                if count > 50:
                     break
+
     return participants
+
+def processDataset(participants):
+    allIronIntakes = np.array(list(participants.values()))
+
+    rowSums = np.sum(allIronIntakes, axis=1, keepdims=True)
+    rowSums[rowSums == 0] = 1 # avoid dividing by 0 if participant has no iron intake
+    normalizedData = allIronIntakes / rowSums
+    normalizedData = normalizedData[~np.all(normalizedData == 0, axis = 1)]
+    return normalizedData
 
 def plotIronIntake(title, ironIntake, imgFileName):
     '''
